@@ -5,7 +5,7 @@ public class DetectCrossingPoint{
 
   public static void main(String[] args) {
 
-    int n, m, p, q, i, xp, xq, yp, yq;
+    int n, m, p, q, i;
     double detA, x, y;
     Scanner sc = new Scanner(System.in);
 
