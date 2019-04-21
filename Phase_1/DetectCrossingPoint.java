@@ -77,13 +77,14 @@ public class DetectCrossingPoint{
 
     //経路が平行（行列式が0）であればNA
     if(-(EPS)<=detA && detA<=EPS){
+      //System.out.println("detA = 0");
       return crossing;
     }
 
     //媒介変数の計算
-    double s = ((s2.p.y-s2.q.y)*(s2.p.x-s1.p.y)+(s2.q.x-s2.p.x)*(s2.p.y-s1.p.y))/Math.abs(detA);
-    double t = ((s1.p.y-s1.q.y)*(s2.p.x-s1.p.y)+(s1.q.x-s1.p.y)*(s2.p.y-s1.p.y))/Math.abs(detA);
-
+    double s = ((s2.p.y-s2.q.y)*(s2.p.x-s1.p.x)+(s2.q.x-s2.p.x)*(s2.p.y-s1.p.y))/detA;
+    double t = ((s1.p.y-s1.q.y)*(s2.p.x-s1.p.x)+(s1.q.x-s1.p.x)*(s2.p.y-s1.p.y))/detA;
+    //System.out.println(s+", "+t);
     //端点は含めないため0<s<1,0<t<1
     if((0<s && s<1) && (0<t && t<1)){
       crossing.x = s1.p.x+(s1.q.x-s1.p.x)*s;
@@ -91,6 +92,7 @@ public class DetectCrossingPoint{
       //System.out.printf("%.5f %.5f\n",x,y);
       return crossing;
     }else{
+      //System.out.println("s,t error");
       return crossing;
     }
   }
@@ -105,9 +107,17 @@ class Axis{
     this.x = 0;
     this.y = 0;
   }
-  public Axis(int x, int y){
+  public Axis(double x, double y){
     this.x = x;
     this.y = y;
+  }
+
+  public double getX(){
+    return this.x;
+  }
+
+  public double getY(){
+    return this.y;
   }
 }
 
