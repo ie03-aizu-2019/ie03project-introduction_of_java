@@ -14,22 +14,34 @@ public class ListCrossingPoint extends DetectCrossingPoint{
   public static void main(String args[]){
     //System.out.println("this is List Program");
     act(input());
+    // for(int i = 0; i<segment.size(); i++){
+    //   System.out.println(segment.get(i).p.getX()+", "+segment.get(i).p.getY()+":"+segment.get(i).q.getX()+", "+segment.get(i).q.getY());
+    // }
   }
 
-  public static void act(Segment [] seg){
+  public static void act(ArrayList<Segment> segment){
 
     Axis crossing = new Axis();
 
-    for(int i = 0; i<seg.length-1; i++){
-      for(int j =i+1; j<seg.length; j++){
+    for(int i = 0; i<segment.size()-1; i++){
+      for(int j =i+1; j<segment.size(); j++){
 
         //交差点検知のメソッド実行, *継承クラスのメソッド
-        crossing = detect(seg[i], seg[j]);
+        Segment seg_i = segment.get(i);
+        Segment seg_j = segment.get(j);
+        crossing = detect(seg_i, seg_j);
 
         //交差点があれば座標を表示なければNA
         if(crossing.x != -1 && crossing.y != -1){
           //System.out.printf("%.5f %.5f\n",crossing.x,crossing.y);
           Crossing_List.add(new Axis(crossing.x, crossing.y));
+          // 交点と各点の道(線分)を追加
+          // segment.remove(seg_i);
+          // segment.remove(seg_j);
+          // segment.add(new Segment(crossing, seg_i.p));
+          // segment.add(new Segment(crossing, seg_i.q));
+          // segment.add(new Segment(crossing, seg_j.p));
+          // segment.add(new Segment(crossing, seg_j.q));
           count++;
         }else{
           //System.out.println("NA");
@@ -40,8 +52,8 @@ public class ListCrossingPoint extends DetectCrossingPoint{
     //Arrayを第一のソートキーにx座標,第二のソートキーにy座標を指定し、ソート後表示。
     Collections.sort(Crossing_List, new Compare());
     for(Axis c : Crossing_List) {
+      axis.add(new Axis(c.x, c.y));
       System.out.printf("%.5f %.5f\n",c.x,c.y);
-
     }
   }
 }
