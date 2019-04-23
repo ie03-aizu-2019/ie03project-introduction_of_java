@@ -7,6 +7,7 @@ private static double inf = Double.longBitsToDouble(0x7ff0000000000000L);
 
 public static void main(String args[]){
   act(input());
+  InputShortestPath();
 }
 
 public static Double NodeDistance(Axis a, Axis b){

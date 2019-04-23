@@ -14,9 +14,7 @@ public class ListCrossingPoint extends DetectCrossingPoint{
   public static void main(String args[]){
     //System.out.println("this is List Program");
     act(input());
-    // for(int i = 0; i<segment.size(); i++){
-    //   System.out.println(segment.get(i).p.getX()+", "+segment.get(i).p.getY()+":"+segment.get(i).q.getX()+", "+segment.get(i).q.getY());
-    // }
+    InputShortestPath();
   }
 
   public static void act(ArrayList<Segment> segment){
@@ -54,6 +52,40 @@ public class ListCrossingPoint extends DetectCrossingPoint{
     for(Axis c : Crossing_List) {
       axis.add(new Axis(c.x, c.y));
       System.out.printf("%.5f %.5f\n",c.x,c.y);
+    }
+  }
+
+  public static void InputShortestPath(){
+
+    for(int i = 0; i<q; i++){
+
+      int start, end;
+
+      if(s[i].charAt(0)=='C'){
+        s[i] = s[i].substring(1);
+        start = Integer.valueOf(s[i])-1+n;
+      }
+      else{
+        start = Integer.valueOf(s[i])-1;
+      }
+
+      if(d[i].charAt(0)=='C'){
+        d[i] = d[i].substring(1);
+        end = Integer.valueOf(d[i])-1+n;
+      }
+      else{
+        end = Integer.valueOf(d[i])-1;
+      }
+
+      System.out.println("axis.size()"+axis.size());
+      System.out.println("start"+start);
+      System.out.println("end"+end);
+      System.out.println((start>=0 && end>=0 && axis.size()>=start && axis.size()>=end)+"\n");
+
+      if(start>=0 && end>=0 && axis.size()>=start && axis.size()>=end){
+        shortestPath.add(new ShortestPath(axis.get(start), axis.get(end),  k[i]));
+      }
+
     }
   }
 }

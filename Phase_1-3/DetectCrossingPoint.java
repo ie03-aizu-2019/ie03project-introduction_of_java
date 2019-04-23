@@ -12,6 +12,10 @@ public class DetectCrossingPoint{
   private static double detA, x, y, input_x, input_y;
   private static Scanner sc = new Scanner(System.in);
 
+  protected static String []s;
+  protected static String []d;
+  protected static int []k;
+
   public static void main(String[] args) {
     act(input());
   }
@@ -51,25 +55,15 @@ public class DetectCrossingPoint{
       segment.add(new Segment(axis.get(b[i]-1), axis.get(e[i]-1)));
     }
 
-    String []s = new String[p];
-    String []d = new String[p];
-    int []k = new int[p];
-    for(int i = 0; i<p; i++){
+    s = new String[q];
+    d = new String[q];
+    k = new int[q];
+
+    for(int i = 0; i<q; i++){
       s[i] = sc.next();
       d[i] = sc.next();
       k[i] = sc.nextInt();
-      if(s[i].charAt(0)=='C' || d[i].charAt(0)=='C'){
-        int start = Integer.parseInt(s[i].substring(0));
-        int end = Integer.parseInt(d[i].substring(0));
-        shortestPath.add(new ShortestPath(axis.get(n+start), axis.get(n+end), k[i]));
-      }
-      else{
-        int start = Integer.parseInt(s[i]);
-        int end = Integer.parseInt(d[i]);
-        shortestPath.add(new ShortestPath(axis.get(start), axis.get(end), k[i]));
-      }
     }
-
 
     return segment;
   }
