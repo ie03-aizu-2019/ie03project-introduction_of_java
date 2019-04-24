@@ -55,8 +55,10 @@ class Compare implements Comparator<Axis> {
       return 1;
     } else if(c1.getY() < c2.getY()) {
       return -1;
-    } else {
+    } else if(c1.getY() > c2.getY()) {
       return 1;
+    }else{
+      return 0;
     }
   }
 }
