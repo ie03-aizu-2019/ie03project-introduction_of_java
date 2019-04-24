@@ -6,7 +6,6 @@ public class DetectCrossingPoint{
 
   protected static ArrayList<Axis> axis = new ArrayList<Axis>();
   protected static ArrayList<Segment> segment = new ArrayList<Segment>();
-  protected static ArrayList<ShortestPath> shortestPath = new ArrayList<ShortestPath>();
   // 変更 メソッド内の変数をメンバ変数に移動、input_x, input_yをdoubleに移動
   public static int n, m, p, q;
   private static double detA, x, y, input_x, input_y;
@@ -143,24 +142,11 @@ class Axis{
 
 //線分クラス
 class Segment{
-  public Axis p = new Axis(0,0);;
+  public Axis p = new Axis(0,0);
   public Axis q = new Axis(0,0);
 
   public Segment(Axis p, Axis q){
     this.p = p;
     this.q = q;
-  }
-}
-
-// 始点と終点と最短距離の数
-class ShortestPath{
-  public Axis s = new Axis(0,0);
-  public Axis d = new Axis(0,0);
-  public int k;
-
-  public ShortestPath(Axis s, Axis d, int k){
-    this.s = s;
-    this.d = d;
-    this.k = k;
   }
 }
