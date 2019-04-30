@@ -52,6 +52,7 @@ public class DetectCrossingPoint{
       //p1,q1,p2,q2を決定 実際にはp1,q1を結ぶ線分,p2,q2を結ぶ線分のインスタンスを作成
       // 変更　seg[i] = new Segment (axis[b[i]-1], axis[e[i]-1]);
       segment.add(new Segment(axis.get(b[i]-1), axis.get(e[i]-1)));
+      segment.add(new Segment(axis.get(e[i]-1), axis.get(b[i]-1)));
     }
 
     s = new String[q];
