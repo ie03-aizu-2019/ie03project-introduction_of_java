@@ -41,7 +41,7 @@ public class DetectCrossingPoint{
     for(int i = 0; i<n; i++){
       input_x = sc.nextDouble();
       input_y = sc.nextDouble();
-      // 変更　axis[i] = new Axis(input_x, input_y);
+      // 変更 axis[i] = new Axis(input_x, input_y);
       axis.add(new Axis(input_x, input_y));
     }
 
@@ -50,7 +50,7 @@ public class DetectCrossingPoint{
       b[i] = sc.nextInt();
       e[i] = sc.nextInt();
       //p1,q1,p2,q2を決定 実際にはp1,q1を結ぶ線分,p2,q2を結ぶ線分のインスタンスを作成
-      // 変更　seg[i] = new Segment (axis[b[i]-1], axis[e[i]-1]);
+      // 変更 seg[i] = new Segment (axis[b[i]-1], axis[e[i]-1]);
       segment.add(new Segment(axis.get(b[i]-1), axis.get(e[i]-1)));
       segment.add(new Segment(axis.get(e[i]-1), axis.get(b[i]-1)));
     }
@@ -75,7 +75,7 @@ public class DetectCrossingPoint{
 
     Axis crossing = new Axis();
     //交差点検知のメソッド実行
-    crossing = detect(segment.get(0), segment.get(1));
+    crossing = detect(segment.get(0), segment.get(2));
 
     //交差点があれば座標を表示なければNA
     if(crossing.x != -1 && crossing.y != -1){

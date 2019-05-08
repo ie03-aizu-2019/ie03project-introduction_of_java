@@ -20,8 +20,8 @@ public class ListCrossingPoint extends DetectCrossingPoint{
 
     Axis crossing = new Axis();
 
-    for(int i = 0; i<segment.size()-1; i++){
-      for(int j =i+1; j<segment.size(); j++){
+    for(int i = 0; i<segment.size()-1; i+=2){
+      for(int j =i+1; j<segment.size(); j+=2){
 
         //交差点検知のメソッド実行, *継承クラスのメソッド
         Segment seg_i = segment.get(i);
