@@ -16,15 +16,17 @@ public class ListCrossingPoint extends DetectCrossingPoint{
     act(input());
   }
 
-  public static void act(Segment [] seg){
+  public static void act(ArrayList<Segment> segment){
 
     Axis crossing = new Axis();
 
-    for(int i = 0; i<seg.length-1; i++){
-      for(int j =i+1; j<seg.length; j++){
+    for(int i = 0; i<segment.size()-1; i+=2){
+      for(int j =i+1; j<segment.size(); j+=2){
 
         //交差点検知のメソッド実行, *継承クラスのメソッド
-        crossing = detect(seg[i], seg[j]);
+        Segment seg_i = segment.get(i);
+        Segment seg_j = segment.get(j);
+        crossing = detect(seg_i, seg_j);
 
         //交差点があれば座標を表示なければNA
         if(crossing.x != -1 && crossing.y != -1){
@@ -40,8 +42,8 @@ public class ListCrossingPoint extends DetectCrossingPoint{
     //Arrayを第一のソートキーにx座標,第二のソートキーにy座標を指定し、ソート後表示。
     Collections.sort(Crossing_List, new Compare());
     for(Axis c : Crossing_List) {
+      axis.add(new Axis(c.x, c.y));
       System.out.printf("%.5f %.5f\n",c.x,c.y);
-
     }
   }
 }
@@ -55,10 +57,8 @@ class Compare implements Comparator<Axis> {
       return 1;
     } else if(c1.getY() < c2.getY()) {
       return -1;
-    } else if(c1.getY() > c2.getY()) {
+    } else {
       return 1;
-    }else{
-      return 0;
     }
   }
 }

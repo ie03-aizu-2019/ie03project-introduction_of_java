@@ -1,16 +1,25 @@
 import java.util.*;
 
 public class DetectCrossingPoint{
+
   protected static final double EPS = 1.0e-8;
+
+  protected static ArrayList<Axis> axis = new ArrayList<Axis>();
+  protected static ArrayList<Segment> segment = new ArrayList<Segment>();
+  // 変更 メソッド内の変数をメンバ変数に移動、input_x, input_yをdoubleに移動
+  public static int n, m, p, q;
+  private static double detA, x, y, input_x, input_y;
+  private static Scanner sc = new Scanner(System.in);
+
+  protected static String []s;
+  protected static String []d;
+  protected static int []k;
 
   public static void main(String[] args) {
     act(input());
   }
   //inputメソッド
-  public static Segment[] input(){
-    int n, m, p, q, i, input_x, input_y;
-    double detA, x, y;
-    Scanner sc = new Scanner(System.in);
+  public static ArrayList<Segment> input(){
 
     //インプット部分
     n = sc.nextInt();
@@ -19,43 +28,54 @@ public class DetectCrossingPoint{
     q = sc.nextInt();
 
     //座標をn組
-    Axis [] axis = new Axis[n];
+    // Axis [] axis = new Axis[n];
 
     //端点
     int [] b = new int[m];
     int [] e = new int[m];
 
     //線分のオブジェクトの配列をm組
-    Segment [] seg = new Segment[m];
+    // Segment [] seg = new Segment[m];
 
     //点の入力
-    for(i = 0; i<n; i++){
-      input_x = sc.nextInt();
-      input_y = sc.nextInt();
-      axis[i] = new Axis(input_x, input_y);
+    for(int i = 0; i<n; i++){
+      input_x = sc.nextDouble();
+      input_y = sc.nextDouble();
+      // 変更 axis[i] = new Axis(input_x, input_y);
+      axis.add(new Axis(input_x, input_y));
     }
 
     //経路を結ぶ点の入力
-    for(i = 0; i<m; i++){
+    for(int i = 0; i<m; i++){
       b[i] = sc.nextInt();
       e[i] = sc.nextInt();
+      //p1,q1,p2,q2を決定 実際にはp1,q1を結ぶ線分,p2,q2を結ぶ線分のインスタンスを作成
+      // 変更 seg[i] = new Segment (axis[b[i]-1], axis[e[i]-1]);
+      segment.add(new Segment(axis.get(b[i]-1), axis.get(e[i]-1)));
+      segment.add(new Segment(axis.get(e[i]-1), axis.get(b[i]-1)));
     }
 
-    //p1,q1,p2,q2を決定 実際にはp1,q1を結ぶ線分,p2,q2を結ぶ線分のインスタンスを作成
-    for(i = 0; i<m; i++){
-      seg[i] = new Segment (axis[b[i]-1], axis[e[i]-1]);
+    s = new String[q];
+    d = new String[q];
+    k = new int[q];
+
+    for(int i = 0; i<q; i++){
+      s[i] = sc.next();
+      d[i] = sc.next();
+      k[i] = sc.nextInt();
     }
-    return seg;
+
+    return segment;
   }
 
 
   //セグメントの配列から二つの線分の交差点を返す このプログラム上では２つしか与えられないのでseg[0],seg[1]
   //継承クラスでオーバーライドする。
-  public static void act(Segment [] seg){
+  public static void act(ArrayList<Segment> segment){
 
     Axis crossing = new Axis();
     //交差点検知のメソッド実行
-    crossing = detect(seg[0], seg[1]);
+    crossing = detect(segment.get(0), segment.get(2));
 
     //交差点があれば座標を表示なければNA
     if(crossing.x != -1 && crossing.y != -1){
@@ -123,7 +143,7 @@ class Axis{
 
 //線分クラス
 class Segment{
-  public Axis p = new Axis(0,0);;
+  public Axis p = new Axis(0,0);
   public Axis q = new Axis(0,0);
 
   public Segment(Axis p, Axis q){
