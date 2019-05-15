@@ -14,11 +14,11 @@ public static void main(String args[]){
   divide();
 
   for(int i = 0; i<shortestPath.size(); i++){
-    System.out.println("s: "+axis.indexOf(shortestPath.get(i).s)+" "+shortestPath.get(i).s+" x=" + shortestPath.get(i).s.x+" y=" + shortestPath.get(i).s.y);
-    System.out.println("d: "+axis.indexOf(shortestPath.get(i).d)+" "+shortestPath.get(i).d+" x=" + shortestPath.get(i).d.x+" y=" + shortestPath.get(i).d.y);
-    System.out.println("k: "+shortestPath.get(i).k);
-    OutputShortestPath(shortestPath.get(i).s, shortestPath.get(i).d, shortestPath.get(i).k);
     System.out.println("\n");
+    System.out.println("s:"+shortestPath.get(i).s+" x=" + shortestPath.get(i).s.x+" y=" + shortestPath.get(i).s.y);
+    System.out.println("d:"+shortestPath.get(i).d+" x=" + shortestPath.get(i).d.x+" y=" + shortestPath.get(i).d.y);
+    System.out.println("k:"+shortestPath.get(i).k);
+    OutputShortestPath(shortestPath.get(i).s, shortestPath.get(i).d, shortestPath.get(i).k);
   }
   // axisの出力
   //   System.out.println("\naxis");
@@ -286,24 +286,20 @@ public static void InputShortestPath(){
   }
 }
 
-private static int max = axis.size();
-private static int u, v, start, end, flagp;
-private static double min;
-
-// 各点の訪問状態 0:訪問していない 1:訪問済　2:訪問中
-private static int [] visited;
-// startから各点までの最短距離を保持
-private static double [] data;
-// startから各点までの最短距離を小さい順からk個表示するためのリスト
-private static ArrayList<ArrayList<Double>> path = new ArrayList<ArrayList<Double>>();
-
 // sからdまでの最短距離を出力するメソッド、kは最短距離の数（短い順） ダイクストラ法
 public static void OutputShortestPath(Axis s, Axis d, int k){
-  max = axis.size();
-  visited = new int[max];
-  data = new double[max];
 
-  for(int i = 0; i<max; i++){
+  int max = axis.size();
+  int i, u, v, start, end, flagp;
+  ArrayList<Integer> next = new ArrayList<Integer>();
+  // 各点の訪問状態 0:訪問していない 1:訪問済　2:訪問中
+  int [] visited = new int[max];
+  double min;
+  // startから各点までの最短距離を保持
+  double [] data = new double[max];
+  // startから各点までの最短距離を小さい順からk個表示するためのリスト
+  ArrayList<ArrayList<Double>> path = new ArrayList<ArrayList<Double>>();
+  for(i = 0; i<max; i++){
     path.add(new ArrayList<Double>());
   }
   // int [] pn = new int[max];
@@ -319,113 +315,129 @@ public static void OutputShortestPath(Axis s, Axis d, int k){
   }
 
   // 各点の訪問状態を0で初期化、各点までの最短距離をinfで初期化
-  for(int i = 0; i<max; i++) {
-    visited[i] = 0;
+  for(i = 0; i<max; i++) {
+    visited[i]=0;
     data[i] = inf;
   }
+
   // startからstartまでの距離は0、startの訪問状態を訪問済にする
+  u = start;
   data[start] = 0;
   visited[start] = 1;
 
-  flagp = 0;
-  System.out.print(start);
-  depthFirstSearch(start, end);
-
   // pn[s] = -1;
-  // while(true) {
-  //   // min = inf;
-  //   u = -1;
-  //   for(int i = 0; i<max; i++) {
-  //     // if(visited[i] != 2 && data[i]<min) {
-  //     if(visited[i] == 1) {
-  //       // min = data[i];
-  //       u = i;
-  //       System.out.println("u="+(u+1));
-  //       break;
-  //     }
-  //   }
-  //
-  //   if(u == -1) {
-  //     break;
-  //   }
-  //
-  //   visited[u] = 2;
-  //
-  //   if(u == start){
-  //     for(v = 0; v<max; v++) {
-  //       if(NodeDistance(axis.get(u), axis.get(v))!=inf){
-  //         path.get(v).add(NodeDistance(axis.get(u), axis.get(v)));
-  //         System.out.println("d="+(v+1)+" "+NodeDistance(axis.get(u), axis.get(v)));
-  //         visited[v]=1;
-  //         // System.out.println("visited["+(v+1)+"] = 1");
-  //       }
-  //     }
-  //   }
-  //   else{
-  //     for(v = 0; v<max; v++) {
-  //       if(NodeDistance(axis.get(u), axis.get(v))!=inf){
-  //         for(int i=0; i<path.get(u).size(); i++){
-  //           double s_to_v = path.get(u).get(i) + NodeDistance(axis.get(u),   axis.get(v));
-  //
-  //           flagp = 0;
-  //           // 最短距離を入れるリストに重複する値があったら flagp=1
-  //           for(int j=0; j<path.get(v).size(); j++){
-  //             if(path.get(v).get(j)==s_to_v){
-  //               flagp = 1;
-  //             }
-  //           }
-  //           if(flagp==0){
-  //             path.get(v).add(s_to_v);
-  //             System.out.println("d="+(v+1)+" "+s_to_v);
-  //             visited[v]=1;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  // 結果の出力
-  // if(path.get(end).size()<k){
-  //   k = path.get(end).size();
-  // }
-  // if(path.get(end).size()>0) {
-  //   Collections.sort(path.get(end));
-  //   for(int j = 0; j<k; j++){
-  //       if(path.get(end).get(j)!=inf){
-  //         System.out.printf("%.5f\n",path.get(end).get(j));
-  //       }
-  //   }
-  //   return;
-  // }
-  // else{
-  //   System.out.println("NA");
-  //   return;
-  // }
-} // end of outputShortestPath()
 
-private static void depthFirstSearch(int u, int end){
-  ArrayList<Integer> next = new ArrayList<Integer>();
-  visited[u]=1;
-  flagp++;
-  System.out.print("[分岐"+flagp+"]");
-  for(v = 0; v<max; v++) {
-    if((NodeDistance(axis.get(u), axis.get(v))!=inf) && (v == end)){
-      System.out.print(" -> "+end+"\n");
-      break;
+  while(true) {
+    min = inf;
+    // u = -1;
+    for(i = 0; i<max; i++) {
+      if(visited[i] == 1 && data[i]<min) {
+        // min = data[i];
+        u = i;
+        System.out.println("u="+(u+1));
+        break;
+      }
     }
-    if((NodeDistance(axis.get(u), axis.get(v))!=inf) && (visited[v]!=1)){
-      next.add(v);
+    //
+    // if(u == -1) {
+    //   break;
+    // }
+      for(v = 0; v<max; v++) {
+        double nodeDistance = NodeDistance(axis.get(start), axis.get(v));
+        if(nodeDistance != inf){
+          path.get(v).add(nodeDistance);
+          System.out.println("d="+(v+1)+" "+nodeDistance);
+          data[v] = nodeDistance;
+          visited[v]=1;
+          next.add(v);
+          System.out.println("visited["+(v+1)+"] = 1");
+        }
+      }
+
+    visited[u] = 2;
+    for(i = 0; i<next.size(); i++) {
+      u = next.get(i);
+      for(v = 0; v<max; v++) {
+        double nodeDistance = NodeDistance(axis.get(u), axis.get(v));
+        if(nodeDistance != inf){
+          for(int j=0; j<path.get(u).size(); j++){
+            double s_to_v = path.get(u).get(j) + nodeDistance;
+
+            flagp = 0;
+            // 最短距離を入れるリストに重複する値があったら flagp=1
+            for(int m=0; m<path.get(v).size(); m++){
+              if(path.get(v).get(m)==s_to_v){
+                flagp = 1;
+              }
+            }
+            if(flagp==0){
+              path.get(v).add(s_to_v);
+              System.out.println("d="+(v+1)+" "+s_to_v);
+              visited[v]=1;
+            }
+          }
+        }
+      }
     }
+
   }
-  if(v != end){
-    // System.out.println(next)
-    for(int i = 0; i<next.size(); i++) {
-      System.out.print(" -> "+next.get(i));
-      depthFirstSearch(next.get(i), end);
-    }
+
+    // for(v = 0; v<max; v++) {
+    //   if(visited[v]!=2 && NodeDistance(axis.get(u), axis.get(v))!=inf) {
+    //
+    //     double comparedata = data[u]+NodeDistance(axis.get(u), axis.get(v));
+    //     // 最短距離の更新
+    //     if(data[v]>comparedata) {
+    //       data[v] = comparedata;
+    //       // pn[v] = u;
+    //       visited[v] = 1;
+    //     }
+    //
+    //     // 最短距離が無いならcomparedataを一つ目の最短距離とする
+    //     if(path.get(u).size()==0){
+    //       path.get(v).add(comparedata);
+    //       System.out.println("d="+(v+1)+" "+comparedata);
+    //     }
+    //     // 重複がなかったら、各uまでの経路 + uからvまでの距離 をvまでの距離として追加
+    //     else{
+    //       for(int i=0; i<path.get(u).size(); i++){
+    //         double s_to_v = path.get(u).get(i)+ NodeDistance(axis.get(u),   axis.get(v));
+    //
+    //         flagp = 0;
+    //         // 最短距離を入れるリストに重複する値があったら flagp=1
+    //         for(int j=0; j<path.get(v).size(); j++){
+    //           if(path.get(v).get(j)==s_to_v){
+    //             flagp = 1;
+    //           }
+    //         }
+    //         if(flagp==0){
+    //           path.get(v).add(s_to_v);
+    //           System.out.println("d="+(v+1)+" "+s_to_v);
+    //         }
+    //       }
+    //       Collections.sort(path.get(v));
+    //     }
+    //   }
+    // }
+
+  // 結果の出力
+  if(path.get(end).size()<k){
+    k = path.get(end).size();
   }
-  visited[u]=0;
-}
+  if(path.get(end).size()>0) {
+    Collections.sort(path.get(end));
+    for(int j = 0; j<k; j++){
+        if(path.get(end).get(j)!=inf){
+          System.out.printf("%.5f\n",path.get(end).get(j));
+        }
+    }
+    return;
+  }
+  else{
+    System.out.println("NA");
+    return;
+  }
+} // end of outputShortestPath()
 
 // 点aと点bまでの距離を返すメソッド
 public static Double NodeDistance(Axis a, Axis b){
@@ -442,6 +454,7 @@ public static Double NodeDistance(Axis a, Axis b){
     return inf;
   }
 }
+
 } // end of Class DistanceOfShortestPath
 
 // 始点と終点と最短距離の数
@@ -456,17 +469,3 @@ class ShortestPath{
     this.k = k;
   }
 }
-
-  //segmentからツリー構造を作るためのクラス
-  class BinaryTree{
-    BinaryTree left; //２分木の左の子ノード
-    BinaryTree right; //右の子ノード
-    int data; //このノードのデータ
-
-    //新たなノードを生成する
-    public BinaryTree(int data, BinaryTree left, BinaryTree right) {
-      this.data = data;
-      this.left = left;
-      this.right = right;
-    }
-  }
