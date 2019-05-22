@@ -328,7 +328,7 @@ public static void OutputShortestPath(Axis s, Axis d, int k){
   visited[start] = 1;
 
   flagp = 0;
-  System.out.print(start);
+  System.out.print((start+1));
   depthFirstSearch(start, end);
 
   // pn[s] = -1;
@@ -407,10 +407,10 @@ private static void depthFirstSearch(int u, int end){
   ArrayList<Integer> next = new ArrayList<Integer>();
   visited[u]=1;
   flagp++;
-  System.out.print("[分岐"+flagp+"]");
+  // System.out.print("[分岐"+flagp+"]");
   for(v = 0; v<max; v++) {
     if((NodeDistance(axis.get(u), axis.get(v))!=inf) && (v == end)){
-      System.out.print(" -> "+end+"\n");
+      System.out.print(" -> "+(end+1)+"\n");
       break;
     }
     if((NodeDistance(axis.get(u), axis.get(v))!=inf) && (visited[v]!=1)){
@@ -420,7 +420,7 @@ private static void depthFirstSearch(int u, int end){
   if(v != end){
     // System.out.println(next)
     for(int i = 0; i<next.size(); i++) {
-      System.out.print(" -> "+next.get(i));
+      System.out.print(" -> "+(next.get(i)+1));
       depthFirstSearch(next.get(i), end);
     }
   }
