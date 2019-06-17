@@ -11,7 +11,7 @@ N, M, P, Q = tuple(map(int, input().split()))
 pos = {}
 for k in range(1,N+1):
     G.add_node(str(k))
-    pos[str(k)] = tuple(map(int, input().split()))
+    pos[str(k)] = tuple(map(float, input().split()))
 
 for k in range(1, M+1):
     edge1, edge2 = input().split()
