@@ -3,8 +3,8 @@ import java.util.*;
 class TestCaseGenerator{
   public static final int xy = 10+1;
   public static void main(String args[]){
-    Random rand = new Random(1250029);
-    int N = rand.nextInt(10)+2; //2<=N<=1000
+    Random rand = new Random(8080);
+    int N = rand.nextInt(10)+2; //2<=N<=1000 #テストケースが大きくなるためここでは縮小
     int M = rand.nextInt(5)+1; //1<=M<=500
     int L  = rand.nextInt(3)+1; //Qの代わり
     int P =0;
@@ -34,6 +34,6 @@ class TestCaseGenerator{
       if(flag_e == 1)System.out.print("C");
       System.out.println(e+" "+k);
     }
-    
+
   }
 }
