@@ -297,7 +297,7 @@ public class Bridge extends ListCrossingPoint {
     }
     //System.out.println(graph_size+" "+count);
     art_point();
-    
+
     /////////////////隣接リストprint test///////////////////
     // for(int i =0; i<graph_size; i++){
     //   System.out.print(i+": ");
@@ -348,7 +348,7 @@ public class Bridge extends ListCrossingPoint {
     System.out.println("幹線道路 :");
     while(! pq.isEmpty()) {
       State p=pq.remove();
-      System.out.println(p.s+"-"+p.t);
+      System.out.println((p.s+1)+"-"+(p.t+1));
     }
 
   }
