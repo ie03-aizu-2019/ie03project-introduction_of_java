@@ -1,31 +1,26 @@
 import java.util.*;
 import java.math.*;
 
-public class Bridge extends ListCrossingPoint {
+public class OutputDataFor1_3 extends ListCrossingPoint {
   public static StringBuilder bl = new StringBuilder();
   public static final int INFTY = (int)Double.POSITIVE_INFINITY;
+  public static final int WHITE = 0;
+  public static final int GRAY = 1;
+  public static final int BLACK = 2;
+  public static int new_node_count = 0;//増えた交差点のカウント
 
-  protected static ArrayList<Path> Path = new ArrayList<Path>();
+  protected static ArrayList<ShortestPath> shortestPath = new ArrayList<ShortestPath>();
   private static double inf = Double.longBitsToDouble(0x7ff0000000000000L);
-
-  //bridge探索のための宣言
-  static int[] parent, prenum, lowest;
-  static int timer=0;
-  static boolean[] visited;
-  static int V;
-  static boolean[][] G;
-  static PriorityQueue<State> pq=new PriorityQueue<>();
+  // private static double [][] nodeDistance;   //Inter-node distance
 
   public static void main(String args[]){
     act(input());
-    // 始点、終点、最短距離の数をPathに入れる
-    InputPath();
+    // 始点、終点、最短距離の数をshortestPathに入れる
+    //InputShortestPath();
     divide();
 
-    for(int i = 0; i<Path.size(); i++){
+    OutputShortestPath();
 
-      OutBridge(Path.get(i).s, Path.get(i).d);
-    }
 
   }
 
@@ -44,7 +39,7 @@ public class Bridge extends ListCrossingPoint {
 
         //交差点があれば座標を表示なければNA
         if(crossing.x != -1 && crossing.y != -1){
-          // System.out.printf("%.5f %.5f\n",crossing.x,crossing.y);
+          //System.out.printf("%.5f %.5f\n",crossing.x,crossing.y);
           Crossing_List.add(new Axis(crossing.x, crossing.y));
           count++;
         }else{
@@ -58,7 +53,8 @@ public class Bridge extends ListCrossingPoint {
     for(Axis c : Crossing_List) {
       if(axisExist(c, axis)==false){
         axis.add(new Axis(c.x, c.y));
-        // System.out.printf("%.5f %.5f\n",c.x,c.y);
+        new_node_count++;
+        //System.out.printf("%.5f %.5f\n",c.x,c.y);
       }
     }
   }
@@ -239,119 +235,88 @@ public class Bridge extends ListCrossingPoint {
     return (double)((int)Math.round((x*Math.pow(10, n))))/Math.pow(10, n);
   }
 
-  // 始点、終点それぞれ0,最後の点としinput
-  public static void InputPath(){
+  // 始点、終点、最短距離の数をshortestPathに入れる
+  public static void InputShortestPath(){
 
-    int start, end;
-    start = 0;
-    end = axis.size()-1;
-    if(start>=0 && end>=0 && axis.size()>=start && axis.size()>=end){
-      Path.add(new Path(axis.get(start), axis.get(end)));
-    }
-    else{
-      Path.add(new Path(new Axis(inf, inf), new Axis(inf, inf)));
+    for(int i = 0; i<1; i++){
+
+      int start, end;
+
+      if(s[i].charAt(0)=='C'){
+        s[i] = s[i].substring(1);
+        start = Integer.valueOf(s[i])-1+n;
+      }
+      else{
+        start = Integer.valueOf(s[i])-1;
+      }
+
+      if(d[i].charAt(0)=='C'){
+        d[i] = d[i].substring(1);
+        end = Integer.valueOf(d[i])-1+n;
+      }
+      else{
+        end = Integer.valueOf(d[i])-1;
+      }
+
+
+      if(start>=0 && end>=0 && axis.size()>=start && axis.size()>=end){
+        shortestPath.add(new ShortestPath(axis.get(start), axis.get(end),  k[i]));
+      }
+      else{
+        shortestPath.add(new ShortestPath(new Axis(inf, inf), new Axis(inf, inf),  k[i]));
+      }
     }
   }
 
-  // Bridgeを見つける
-  public static void OutBridge(Axis s, Axis d){
+  // sからdまでの最短距離を出力するメソッド、kは最短距離の数（短い順） ダイクストラ法
+  public static void OutputShortestPath(){
 
+    int max = axis.size();
+    int u, v, start, end, flagp;
+    int new_edge_count= 0;
+    // 各点の訪問状態 0:訪問していない 1:訪問済 2:訪問中
+    int [] visited = new int[max];
+    double min;
+    // startから各点までの最短距離を保持
+    double [] data = new double[max];
 
-    int graph_size = axis.size();
-    int start, end;
-    //int count =0;
-
-    // s.x=infだったら終了（inputPath()でaxisの範囲を超えていたらinfを代入している //ここ ）
-    if(s.x == inf){
-      System.out.println("NA");
-      return;
-    }
-    else{
-      start = axis.indexOf(s);
-      end = axis.indexOf(d);
-    }
 
     //重み付きグラフ 隣接リスト
     ArrayList<ArrayList<Pair>> adj = new ArrayList<ArrayList<Pair>>();
-    for(int i = 0; i<graph_size; i++){
+    for(int i = 0; i<max; i++){
       adj.add(new ArrayList<Pair>());
     }
-
-    //静的宣言してるものに代入
-    V=graph_size;
-    parent=new int[V];
-    prenum=new int[V];
-    lowest=new int[V];
-    visited=new boolean[V];
-    G=new boolean[V][V];
-
-    for(int i = 0; i<graph_size; i++){
-      for(int j = 0; j<graph_size; j++){
+    for(int i = 0; i<max; i++){
+      for(int j = 0; j<max; j++){
         if(NodeDistance(axis.get(i), axis.get(j))!=inf){
           adj.get(i).add(new Pair(j, NodeDistance(axis.get(i), axis.get(j))));
-          //count++;
-          //System.out.println(i+" "+j);
-          G[i][j]=G[j][i]=true;
         }
       }
     }
-    //System.out.println(graph_size+" "+count);
-    art_point();
+    //隣接リストprint test
+    for(int i =0; i<max; i++){
+      for(Pair pair : adj.get(i)){
+        if(i<(int)setDigit(pair.v,5))new_edge_count++;
+      }
+    }
+    //plotのために再出力
+    System.out.println((n+new_node_count)+" "+new_edge_count+" "+p+" "+n);
+    for(Axis Ax : axis){
+      System.out.println(Ax.x+" "+Ax.y);
+    }
+    for(int i =0; i<max; i++){
+      for(Pair pair : adj.get(i)){
+        if(i<(int)setDigit(pair.v,5)){
+          if(i+1>n)System.out.print("C"+(i+1-n));
+          else  System.out.print((i+1));
 
-    /////////////////隣接リストprint test///////////////////
-    // for(int i =0; i<graph_size; i++){
-    //   System.out.print(i+": ");
-    //   for(Pair pair : adj.get(i)){
-    //     System.out.print("("+(int)setDigit(pair.v,5)+","+setDigit(pair.c,5)+") ");//実際は-1
-    //   }
-    //   System.out.println();
-    // }
-    ///////////////////////////////////////////////////////
-
-  } // end of OutBridge()
-
-  //深さ優先探索
-  static void dfs(int current, int prev) {
-    prenum[current]=lowest[current]=timer;
-    timer++;
-    visited[current]=true;
-    int next=0;
-    for(int i=0; i<V; i++) {
-      if(G[current][i]) {
-        next=i;
-        if(!visited[next]) {
-          parent[next]=current;
-          dfs(next, current);
-          lowest[current]=Math.min(lowest[current], lowest[next]);
-        }
-        else if(next != prev) {//currentからnextがbackedgeの時
-          lowest[current]=Math.min(lowest[current], prenum[next]);
+          if(((int)setDigit(pair.v,5)+1)>n)System.out.println(" C"+(((int)setDigit(pair.v,5)+1)-n));
+          else System.out.println(" "+((int)setDigit(pair.v,5)+1));
         }
       }
     }
-  }
 
-  static void art_point() {
-    for(int i=0; i<V; i++) {
-      visited[i]=false;
-    }
-    timer=1;
-    dfs(0, -1);
-
-    for(int i=1; i<V; i++) {
-      int p=parent[i];
-      if(prenum[p]<lowest[i]) {
-        pq.add(new State(Math.min(p, i), Math.max(p, i)));
-      }
-    }
-
-    System.out.println("幹線道路 :");
-    while(! pq.isEmpty()) {
-      State p=pq.remove();
-      System.out.println((p.s+1)+"-"+(p.t+1));
-    }
-
-  }
+  } // end of outputShortestPath()
 
   // 点aと点bまでの距離を返すメソッド
   public static Double NodeDistance(Axis a, Axis b){
@@ -364,33 +329,19 @@ public class Bridge extends ListCrossingPoint {
       return inf;
     }
   }
-
-  //現在の状況比較のためのクラス内クラス
-  static class State implements Comparable<State>{
-    int s, t;
-    State(int s, int t){
-      this.s=s;
-      this.t=t;
-    }
-    public int compareTo(State p) {
-      if(p.s==this.s) {
-        return this.t-p.t;
-      }
-      return this.s-p.s;
-    }
-  }
-
-} // end of Class Bridge
+} // end of Class DistanceOfShortestPath
 
 
 // 始点と終点と最短距離の数
-class Path{
+class ShortestPath{
   public Axis s = new Axis(0,0);
   public Axis d = new Axis(0,0);
+  public int k;
 
-  public Path(Axis s, Axis d){
+  public ShortestPath(Axis s, Axis d, int k){
     this.s = s;
     this.d = d;
+    this.k = k;
   }
 }
 
