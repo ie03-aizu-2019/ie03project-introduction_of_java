@@ -65,3 +65,7 @@ Python3 ./plot_and_test/graph_plot.py < ./plot_and_test/data2_8_3.txt
 
 java -classpath ./Phase_2/ Phase1_8 < ./plot_and_test/data2_8_3.txt
 
+
+# TestCase Generator
+java -classpath ./Phase_1/ TestCaseGenerator
+
