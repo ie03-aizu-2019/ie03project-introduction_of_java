@@ -38,7 +38,7 @@ java -classpath ./Phase_2XXXXX < ../plot_and_test/data2_6.txt
 
 
 # Phase2_7
-java -classpath ./Phase_2/ DistanceOfShortestPath7 < ../plot_and_test/data2_7.txt
+java -classpath ./Phase_2/ DistanceOfShortestPath7 < ./plot_and_test/data2_7.txt
 
 
 # Phase2_8
