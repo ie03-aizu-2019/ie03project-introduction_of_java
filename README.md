@@ -7,6 +7,15 @@ Python3 ./plot_and_test/graph_plot.py < ./plot_and_test/data1_1.txt
 java -classpath ./Phase_1/ DetectCrossingPoint < ./plot_and_test/data1_1.txt
 
 
+Python3 ./plot_and_test/graph_plot.py < ./plot_and_test/data1_1_2.txt
+
+java -classpath ./Phase_1/ DetectCrossingPoint < ./plot_and_test/data1_1_2.txt
+
+
+Python3 ./plot_and_test/graph_plot.py < ./plot_and_test/data1_1_3.txt
+
+java -classpath ./Phase_1/ DetectCrossingPoint < ./plot_and_test/data1_1_3.txt
+
 # Phase1-2
 Python3 ./plot_and_test/graph_plot.py < ./plot_and_test/data1_2.txt 
 
@@ -38,7 +47,7 @@ java -classpath ./Phase_2XXXXX < ../plot_and_test/data2_6.txt
 
 
 # Phase2_7
-java -classpath ./Phase_2XXX< ../plot_and_test/data2_7.txt
+java -classpath ./Phase_2/ DistanceOfShortestPath7 < ./plot_and_test/data2_7.txt
 
 
 # Phase2_8
@@ -55,4 +64,8 @@ java -classpath ./Phase_2/ Phase1_8 < ./plot_and_test/data2_8_2.txt
 Python3 ./plot_and_test/graph_plot.py < ./plot_and_test/data2_8_3.txt
 
 java -classpath ./Phase_2/ Phase1_8 < ./plot_and_test/data2_8_3.txt
+
+
+# TestCase Generator
+java -classpath ./Phase_1/ TestCaseGenerator
 
