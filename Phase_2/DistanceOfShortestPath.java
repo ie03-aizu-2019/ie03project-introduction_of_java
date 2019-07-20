@@ -4,12 +4,10 @@ import java.math.*;
 public class DistanceOfShortestPath extends ListCrossingPoint {
   public static StringBuilder bl = new StringBuilder();
   public static final int INFTY = (int)Double.POSITIVE_INFINITY;
-  public static final int WHITE = 0;
-  public static final int GRAY = 1;
-  public static final int BLACK = 2;
+  public static final double  inf = Double.POSITIVE_INFINITY;
+  protected static int[] saveShotestPath;
 
   protected static ArrayList<ShortestPath> shortestPath = new ArrayList<ShortestPath>();
-  private static double inf = Double.longBitsToDouble(0x7ff0000000000000L);
   // private static double [][] nodeDistance;   //Inter-node distance
 
   public static void main(String args[]){
@@ -20,7 +18,7 @@ public class DistanceOfShortestPath extends ListCrossingPoint {
 
     for(int i = 0; i<shortestPath.size(); i++){
 
-      OutputShortestPath(shortestPath.get(i).s, shortestPath.get(i).d, shortestPath.get(i).k);
+      Output(shortestPath.get(i).s, shortestPath.get(i).d, shortestPath.get(i).k);
     }
 
   }
@@ -269,16 +267,17 @@ public class DistanceOfShortestPath extends ListCrossingPoint {
   }
 
   // sからdまでの最短距離を出力するメソッド、kは最短距離の数（短い順） ダイクストラ法
-  public static void OutputShortestPath(Axis s, Axis d, int k){
-
+  public static void Output(Axis s, Axis d, int k){
+    int start;
+    int end;
     int max = axis.size();
-    int u, v, start, end, flagp;
-    // 各点の訪問状態 0:訪問していない 1:訪問済 2:訪問中
-    int [] visited = new int[max];
-    double min;
-    // startから各点までの最短距離を保持
-    double [] data = new double[max];
-
+    double matrix [][] = new double [max][max];//隣接行列
+    //初期化
+    for(int i =0; i<max; i++){
+      for(int j =0; j<max; j++){
+        matrix[i][j] = inf;
+      }
+    }
     // s.x=infだったら終了（inputShortestPath()でaxisの範囲を超えていたらinfを代入している //ここ ）
     if(s.x == inf){
       System.out.println("NA");
@@ -289,97 +288,16 @@ public class DistanceOfShortestPath extends ListCrossingPoint {
       end = axis.indexOf(d);
     }
 
-    //重み付きグラフ 隣接リスト
-    ArrayList<ArrayList<Pair>> adj = new ArrayList<ArrayList<Pair>>();
-    for(int i = 0; i<max; i++){
-      adj.add(new ArrayList<Pair>());
-    }
+    //隣接行列に代入
     for(int i = 0; i<max; i++){
       for(int j = 0; j<max; j++){
         if(NodeDistance(axis.get(i), axis.get(j))!=inf){
-          adj.get(i).add(new Pair(j, NodeDistance(axis.get(i), axis.get(j))));
+          matrix[i][j] = NodeDistance(axis.get(i), axis.get(j));
         }
       }
     }
-    // //隣接リストprint test
-    // for(int i =0; i<max; i++){
-    //   System.out.print(i+": ");
-    //   for(Pair pair : adj.get(i)){
-    //     System.out.print("("+(int)setDigit(pair.v,5)+","+setDigit(pair.c,5)+") ");
-    //   }
-    //   System.out.println();
-    // }
-
-    //**優先度付きキューにおけるダイクストラ法の実装。
-
-    // int color[] = new int[max];
-    // double da[] = new double[max];
-    // PriorityQueue<Pair> PQ = new PriorityQueue<Pair>();
-    // PQ.add(new Pair(start, 0)); //start
-    // for(int i = 0; i<max; i++){
-    //   da[i] = INFTY;
-    //   color[i] = WHITE;
-    // }
-    // da[start] = 0; // start
-    // while(PQ.isEmpty() != true){
-    //   Pair f = PQ.poll();
-    //   u = f.v;
-    //   color[u] = BLACK;
-    //
-    //   if(da[u] < f.c*(-1))continue;
-    //   for(int i = 0; i<adj.get(u).size(); i++){
-    //     v = adj.get(u).get(i).v;
-    //     if(color[v] == BLACK)continue;
-    //     color[v]+=1;
-    //     double c = adj.get(u).get(i).c;
-    //     if(da[v] > da[u] + c){
-    //       da[v] = da[u] + c;
-    //       PQ.add(new Pair(v, da[v]));
-    //     }
-    //   }
-    // }
-    // for(int i = 0; i<max; i++){
-    //   bl.append(i).append(" ").append(da[i]).append("\n");
-    // }
-    // System.out.print(bl);
-    // System.out.println(setDigit(da[end],5));
-
-
-
-    //k-shortest-path
-    //隣接リストと優先度付きキューを用いたダイクストラ法によるk番目までの最短経路
-    ArrayList<ArrayList<Double>> dist = new ArrayList<ArrayList<Double>>();
-
-    for(int i = 0; i<max; i++){
-      dist.add(new ArrayList<Double>());
-    }
-
-    //priority_queue<Edge> Q;
-    //Q.push(Edge(-1, s, 0));
-    PriorityQueue<Pair> Q = new PriorityQueue<Pair>();
-    Q.add(new Pair(start, 0));
-
-    while(Q.isEmpty() != true) {
-      //Edge e = Q.top(); Q.top();
-      Pair e = Q.poll();
-
-      if (dist.get(e.v).size() >= k) continue;
-      //dist[e.dst].push_back(e.weight);
-      dist.get(e.v).add(e.c);
-
-      //FOR(f, adj.get(e.dst)]) Q.push(Edge(f->src, f->dst, f->weight+e.weight));
-      for(Pair f: adj.get(e.v)) {
-        Q.add(new Pair(f.v, f.c+e.c));
-      }
-    }
-
-    //print
-
-    for(double distance : dist.get(end)){
-      System.out.println(setDigit(distance,5));
-    }
-
-    //k-path
+    //yensalgorithm
+    yens(start, end, k, matrix);
   } // end of outputShortestPath()
 
   // 点aと点bまでの距離を返すメソッド
@@ -393,7 +311,221 @@ public class DistanceOfShortestPath extends ListCrossingPoint {
       return inf;
     }
   }
+
+
+  ///yens algorithm
+  public static void yens(int start, int end, int k, double matrix[][]){
+    ArrayList<KPath> A = new ArrayList<KPath>();//Aは優先度付きキューではなくていい
+    PriorityQueue B = new PriorityQueue (new MyComparator ());
+    ArrayList<Double> distance_list = new ArrayList<Double>();//重複ルートを消すための距離のリスト
+
+    int num_node = 6; //交差点以外の数
+    int spurnode;
+    //まず第一経路を探索する
+    B.add(OutputShortestPath(start, end, matrix));
+    A.add((KPath)B.poll());
+
+    for(int outer = 0; outer<k-1; outer++){
+
+      KPath base = (KPath)A.get(A.size()-1); //たどるルートの基準 Aに最後に追加されたもの
+      ArrayList<Double> rootweight = new ArrayList<Double>(); //重み保存 次々と合計されていく右端に今までの累積
+      ArrayList<Integer> spurroot = new ArrayList<Integer>(); //spurroot保存用 rootの経路をリストに一つずつ保存
+
+      loop: for(int i = 0; i < base.path.size()-1; i++){//base.path.size()
+        ArrayList<Integer> nextpath = new ArrayList<Integer>(); //spurnodeから次のノードで経路を無限にするものを入れるリスト
+        spurnode = base.path.get(i);
+
+        //2回目のループ以降rootを足していく。
+        if(i>0){
+          int root = base.path.get(i-1);
+          spurroot.add(root);// ok
+
+          //3回目のループ以降weightを足していく
+          if(i>1){
+            rootweight.add(rootweight.get(i-2)+matrix[spurroot.get(spurroot.size()-1)-1][spurnode-1]);
+          }
+          else{//i==1
+            rootweight.add(matrix[spurroot.get(spurroot.size()-1)-1][spurnode-1]);
+          }
+        }
+
+        //Aに格納されているすべてのルートのsupurnodeからのnextpathをリストに追加。
+        for(KPath npath: A){
+          loop2: for(int p=0; p<npath.path.size(); p++){
+            if(npath.path.get(p) == spurnode){
+              for(int m = 0; m<nextpath.size(); m++){
+                if(nextpath.get(m) == npath.path.get(p+1)){ //nextpathに重複したものを入れないようにする
+                  continue loop2;
+                }
+              }
+              for(int q = 0;q<spurroot.size();q++){
+                if(spurroot.get(q)!=npath.path.get(q))continue loop2; //Aにある経路でspurnodeまでの経路が全て一致している訳ではないものは追加しない TODO
+              }
+              //System.out.println(spurnode+" "+npath.path.get(p+1));
+              nextpath.add(npath.path.get(p+1));
+            }
+          }
+        }
+
+        //経路を通れなくする
+        ArrayList<Double> tmp = new ArrayList<Double>();
+        for(int p=0; p<nextpath.size(); p++){
+          tmp.add(matrix[spurnode-1][nextpath.get(p)-1]);
+          matrix[spurnode-1][nextpath.get(p)-1] = inf;
+        }
+
+        KPath box = OutputShortestPath(spurnode-1, end, matrix);
+
+        //経路を復元 DONE
+        for(int p=0; p<nextpath.size(); p++){
+          matrix[spurnode-1][nextpath.get(p)-1] = tmp.get(p);
+        }
+
+        if(box == null)continue; //経路が無限で会ったとき、次の処理
+
+        //経路を修正, spurrootと距離(重み)を足している
+        if(i>0){
+          box.distance += round(rootweight.get(rootweight.size()-1));
+          for(int j = spurroot.size()-1; j >=0; j--){
+            for(int m = 0; m<box.path.size(); m++){
+              if(box.path.get(m) == spurroot.get(j))continue loop; //重複があった場合はBに追加しない
+            }
+            box.path.add(0, spurroot.get(j));
+          }
+        }
+        //System.out.println(box.path);
+        for(double dis: distance_list){//同じ経路をキューに入れないため
+          if(dis == box.distance)continue loop;
+        }
+
+        distance_list.add(box.distance);
+        B.add(box);
+      }
+      KPath shortest = (KPath)B.poll(); // Aに短いものを追加
+      if(shortest!=null)A.add(shortest);
+    }
+
+    for(int i = 0; i< A.size(); i++){
+      //System.out.println((i+1)+"path");
+      ArrayList<Integer> path_list = A.get(i).path;
+      for(int p =0; p<path_list.size(); p++){
+        if(path_list.get(p)>num_node)System.out.print(OutputIntersection(path_list.get(p)-num_node));
+        else System.out.print(path_list.get(p)+" ");
+      }
+      System.out.println();
+      System.out.println(A.get(i).distance);
+      //System.out.println();
+    }
+
+    //Bに残っている経路の確認
+    // while(B.size()>0){
+    //   KPath p = (KPath)B.poll();
+    //   System.out.println();
+    //   System.out.println(p.distance);
+    //   System.out.println(p.path);
+    // }
+  }
+
+  public static KPath OutputShortestPath(int s, int d, double matrix[][]){
+
+    int max = matrix.length;//辺の数
+    saveShotestPath = new int[max];
+    int u, v, start, end, flagp;
+    // 各点の訪問状態 0:訪問していない 1:訪問済　2:訪問中
+    int [] visited = new int[max];
+    double min;
+    // startから各点までの最短距離を保持
+    double [] data = new double[max];
+    // int [] pn = new int[max];
+
+    start = s;
+    end = d;
+
+    // 各点の訪問状態を0で初期化、各点までの最短距離をinfで初期化
+    for(int i = 0; i<max; i++) {
+      visited[i]=0;
+      data[i] = inf;
+      saveShotestPath[i] = -1;
+    }
+
+    // startからstartまでの距離は0、startの訪問状態を訪問済にする
+    data[start] = 0;
+    visited[start] = 1;
+
+    // pn[s] = -1;
+
+    while(true) {
+      min = inf;
+      u = -1;
+      for(int i = 0; i<max; i++) {
+        if(visited[i] != 2 && data[i]<min) {
+          min = data[i];
+          u = i;
+        }
+      }
+
+      if(u == -1) {
+        break;
+      }
+
+      visited[u] = 2;
+      for(v = 0; v<max; v++) {
+        if(visited[v]!=2 && matrix[u][v]!=inf) {
+          // 最短距離の更新
+          if(data[v]>data[u]+matrix[u][v]) {
+            data[v] = data[u] + matrix[u][v];
+            // pn[v] = u;
+            visited[v] = 1;
+            saveShotestPath[v] = u;
+          }
+        }
+      }
+    }
+
+    double distance = data[end];
+    if(distance == inf) return null;
+    //System.out.printf("%.5f\n",distance);
+    KPath k_path = ReverseSearchAndOutput(start, end, max, round(distance));
+    return k_path;
+  } // end of outputShortestPath()
+  public static KPath ReverseSearchAndOutput(int start, int end, int max, double distance){
+    //System.out.println(distance);
+    KPath k_path = new KPath(distance);
+    int[] route;
+    route = new int[max];
+    int route_element = 0;
+
+    for(int i = end;i != start;i = saveShotestPath[i]){
+      route[route_element++] = i+1;
+    }
+
+    route[route_element++] = start+1;
+
+    for(int i = route_element - 1;i >= 0;i--){
+      //System.out.print(route[i] + " ");
+      k_path.path.add(route[i]);
+    }
+
+    //System.out.println();
+    return k_path;
+  }
+
+  public static String OutputIntersection(int numberOfIntersection){
+
+    return "C" + numberOfIntersection + " ";
+
+  }
+
+  private static double round(double num){
+    BigDecimal numDecBefore = new BigDecimal(num);
+    BigDecimal numDecAfter = numDecBefore.setScale(6, BigDecimal.ROUND_HALF_UP);
+    double numAfter = numDecAfter.doubleValue();
+    return numAfter;
+  }
+
 } // end of Class DistanceOfShortestPath
+
+
 
 
 // 始点と終点と最短距離の数
@@ -426,5 +558,36 @@ class Pair implements Comparable<Pair> {
   }
   public int compareTo(Pair o) {
     return (int)this.c - (int)o.c;
+  }
+}
+
+class KPath{
+  double distance = 0;
+  ArrayList<Integer> path = new ArrayList<Integer>();
+  public KPath(double distance){
+    this.distance = distance;
+    this.path = path;
+  }
+  public KPath(double distance, ArrayList<Integer> path){
+    this.distance = distance;
+    this.path = path;
+  }
+}
+
+class MyComparator implements Comparator {
+  @Override
+  public int compare (Object arg0, Object arg1) {
+    KPath path0 = (KPath)arg0;
+    KPath path1 = (KPath)arg1;
+    double x = path0.distance;
+    double y = path1.distance;
+
+    if (x > y) {
+      return 1;
+    } else if (x < y) {
+      return -1;
+    } else{
+      return 0;
+    }
   }
 }
