@@ -100,14 +100,22 @@ class TestCaseGenerator{
     }
 
     for(int i = 0; i<M; i++){
-      int first = rand.nextInt(N)+1;
-      int second = rand.nextInt(N)+1;
+      int first =0;
+      int second =0;
+      while(first == second){
+        first = rand.nextInt(N)+1;
+        second = rand.nextInt(N)+1;
+      }
       System.out.println(first+" "+second);
     }
 
     for (int i =0; i<L; i++){
-      int s = rand.nextInt(xy);
-      int e = rand.nextInt(xy);
+      int s = 0;
+      int e = 0;
+      while(s == e){
+      s = rand.nextInt(xy);
+      e = rand.nextInt(xy);
+    }
       int k = rand.nextInt(xy);
       int flag_s = rand.nextInt(2);
       int flag_e = rand.nextInt(2);
