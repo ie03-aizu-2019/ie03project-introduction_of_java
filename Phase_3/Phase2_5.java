@@ -478,8 +478,7 @@ public class Phase2_5 extends Phase1_2 {
 
     double distance = data[end];
     if(distance == inf){
-      System.out.println("NA");
-      System.exit(0);
+      return null;
     }
     //System.out.printf("%.5f\n",distance);
     KPath k_path = ReverseSearchAndOutput(start, end, max, round(distance));
