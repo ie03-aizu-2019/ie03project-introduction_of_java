@@ -10,6 +10,7 @@ Phase1_2.java
 
 # Phase1-3
 java -classpath ./plot_and_test/ OutputDataFor1_3 < ./plot_and_test/data1_3.txt
+
 Phase1_3.java
 
 # Phase1-4
@@ -34,6 +35,7 @@ Phase2_8.java
 
 # TestCase Generator
 ```java TestCaseGenerator```
+
 |オプション|使用方法|
 |---|---|
 |-v|-v n でPhaseを指定|
