@@ -27,6 +27,7 @@
 ```java Phase3_9 -a -d```
 
 
+※データが大きすぎると重くなるのでrand.nextInt(100000)>rand.nextInt(1000)ぐらいにする。
 ```java TestCaseGenerator -v 2 | python3 graph_plot.py```
 
 
