@@ -38,4 +38,5 @@
 
 ```java TestCaseGenerator -v 2 | java Phase3_9 -v 2```
 
+```cat testcase.txt | java Phase3_9 -v 2 > out.txt```
 
